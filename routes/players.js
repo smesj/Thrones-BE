@@ -25,8 +25,6 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/:playerId', async (req, res) => {
-    const { playerId } = req.params;
-    const { firstname, lastname, nickname } = req.body;
     const player = await updateById(req.body, req.params.playerId, 'players');
     res.send(player)
 })
@@ -56,8 +54,8 @@ router.get('/withFactions', async (req, res) => {
 
     const playerResults = await Promise.all(players.map( async (player) => {
         const { rows: gameEntries } = await db.query('SELECT * FROM gameentry WHERE player_id = $1', [player.id]);
-        player.factionTotals = factions.map((faction) => {
-            const factionEntries = gameEntries.filter(game => game.faction_id === faction.id);
+        player.factionTotals = await factions.map((faction) => {
+            const factionEntries = gameEntries.filter(game => game.faction_id === faction.id); //something is fucked here!!! FUCK
             faction.totalPoints = factionEntries.reduce((acc, curr) => {
                 return acc + curr.points;
             }, 0)
@@ -66,6 +64,11 @@ router.get('/withFactions', async (req, res) => {
             return faction
 
         })
+        player.gamesPlayed = gameEntries.length;
+        player.totalPoints = gameEntries.reduce((acc, curr) => {
+            return acc + curr.points;
+        }, 0);
+        player.wins = gameEntries.filter(game => game.win === true).length;
         return player;
     }));
     

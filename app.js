@@ -1,14 +1,27 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mountRoutes from './routes'
+import cors from 'cors';
 
 const app = express();
+
+const whitelist = ['http://localhost:3000']
+const corsOptions = {
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
+}
 
 /**
 * Middleware
 */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors(corsOptions));
 
 // catch 400
 app.use((err, req, res, next) => {

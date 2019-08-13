@@ -66,8 +66,9 @@ router.get('/withFactions', async (req, res) => {
         var totalPoints = gameEntries.reduce((acc, curr) => {
             return acc + curr.points;
         }, 0);
+        var wins = gameEntries.filter(game => game.win === true).length;
 
-        const playerWithFactions = { ...player, factionTotals, gamesPlayed, totalPoints };
+        const playerWithFactions = { ...player, factionTotals, gamesPlayed, totalPoints, wins };
         return playerWithFactions;
     }))
 

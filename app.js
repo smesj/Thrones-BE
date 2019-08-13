@@ -21,7 +21,7 @@ const corsOptions = {
 */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
+app.use(cors());
 
 // catch 400
 app.use((err, req, res, next) => {

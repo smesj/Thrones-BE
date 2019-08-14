@@ -78,7 +78,7 @@ const corsOptions = {
 */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use("/", authRouter);
 
 // catch 400

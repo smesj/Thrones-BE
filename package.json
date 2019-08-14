@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js --exec babel-node",
+    "start": "nodemon --exec babel-node src/server.js",
     "release": "npm run clean && npm run build && npm run serve",
-    "clean": "rm -rf dist && mkdir dist",
-    "build": "babel . -s -D -d dist --presets env --ignore node_modules",
-    "serve": "node dist/server.js"
+    "clean": "rm -rf build && mkdir build",
+    "build": "babel ./src --out-dir ./build --presets @babel/preset-env",
+    "serve": "node build/server.js"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +28,9 @@
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
     "nodemon": "^1.19.1"
   }
 }

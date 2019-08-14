@@ -7,7 +7,7 @@
     "start": "nodemon --exec babel-node src/server.js",
     "release": "npm run clean && npm run build && npm run serve",
     "clean": "rm -rf build && mkdir build",
-    "build": "babel ./src --out-dir ./build --presets @babel/preset-env --ignore node_modules",
+    "build": "babel ./src --out-dir ./build --presets @babel/preset-env",
     "serve": "node build/server.js"
   },
   "keywords": [],

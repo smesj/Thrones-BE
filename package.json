@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node server.js",
+    "start": "nodemon --exec babel-node src/server.js",
     "release": "npm run clean && npm run build && npm run serve",
     "clean": "rm -rf build && mkdir build",
-    "build": "babel . --out-dir build --presets @babel/preset-env --ignore node_modules",
+    "build": "babel ./src --out-dir ./build --presets @babel/preset-env --ignore node_modules",
     "serve": "node build/server.js"
   },
   "keywords": [],

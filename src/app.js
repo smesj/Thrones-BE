@@ -5,6 +5,7 @@ import cors from 'cors';
 import expressSession from 'express-session';
 import passport from 'passport';
 import Auth0Strategy from 'passport-auth0';
+import path from 'path';
 require("dotenv").config();
 const authRouter = require("./auth");
 

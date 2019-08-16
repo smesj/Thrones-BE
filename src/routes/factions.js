@@ -6,6 +6,6 @@ const router = new Router();
 module.exports = router
 
 router.get('/', async (req, res) => {
-    const { rows: factions } = await db.query('SELECT * FROM factions');
+    const { rows: factions } = await db.query('SELECT * FROM thrones.factions');
     res.send(factions);
 })

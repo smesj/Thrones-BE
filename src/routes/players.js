@@ -14,27 +14,27 @@ const updateById = async (body, id, table) => {
 }
 
 router.get('/', async (req, res) => {
-    const { rows: players } = await db.query('SELECT * FROM players');
+    const { rows: players } = await db.query('SELECT * FROM thrones.players');
     res.send(players);
 })
 
 router.post('/', async (req, res) => {
     const { firstName, lastName, nickName} = req.body;
-    const {rows: player} = await db.query('INSERT INTO players ("firstName", "lastName", "nickName") values ($1, $2, $3)', [firstName, lastName, nickName])
+    const {rows: player} = await db.query('INSERT INTO thrones.players ("firstName", "lastName", "nickName") values ($1, $2, $3)', [firstName, lastName, nickName])
     res.send(player);
 })
 
 router.post('/:playerId', async (req, res) => {
-    const player = await updateById(req.body, req.params.playerId, 'players');
+    const player = await updateById(req.body, req.params.playerId, 'thrones.players');
     res.send(player)
 })
 
 router.get('/withGames', async (req, res) => {
 
-    const { rows: players }  = await db.query('SELECT * FROM players');
+    const { rows: players }  = await db.query('SELECT * FROM thrones.players');
 
     const playerResults = await Promise.all(players.map( async (player) => {
-        const { rows: gameEntries } = await db.query('SELECT * FROM "gameEntry" WHERE player_id = $1', [player.id]);
+        const { rows: gameEntries } = await db.query('SELECT * FROM thrones."gameEntry" WHERE player_id = $1', [player.id]);
         player.games = gameEntries;
         player.totalPoints = player.games.reduce((acc, curr) => {
             return acc + curr.points;
@@ -49,11 +49,11 @@ router.get('/withGames', async (req, res) => {
 
 router.get('/withFactions', async (req, res) => {
 
-    const { rows: players }  = await db.query('SELECT * FROM players');
-    const { rows: factions }  = await db.query('SELECT * FROM factions');
+    const { rows: players }  = await db.query('SELECT * FROM thrones.players');
+    const { rows: factions }  = await db.query('SELECT * FROM thrones.factions');
 
     const playerResults = await Promise.all(players.map( async (player) => {
-        const { rows: gameEntries } = await db.query('SELECT * FROM "gameEntry" WHERE player_id = $1', [player.id]);
+        const { rows: gameEntries } = await db.query('SELECT * FROM thrones."gameEntry" WHERE player_id = $1', [player.id]);
 
         const factionTotals = factions.map((faction) => {
             const factionEntries = gameEntries.filter(game => game.faction_id === faction.id);

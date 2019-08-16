@@ -1,7 +1,11 @@
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import mountRoutes from './routes'
 import cors from 'cors';
+import jwt from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
+
 
 const app = express();
 
@@ -22,6 +26,20 @@ const corsOptions = {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+
+const checkJwt = jwt({
+    secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://thrones.auth0.com/.well-known/jwks.json`
+    }),
+
+    // Validate the audience and the issuer.
+    audience: 'Ho2KUMFOJDO2a9EKW7hqrmKqdl0lt053',
+    issuer: `https://thrones.auth0.com/`,
+    algorithms: ['RS256']
+});
 
 // catch 400
 app.use((err, req, res, next) => {

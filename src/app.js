@@ -1,13 +1,11 @@
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import mountRoutes from './routes'
 import cors from 'cors';
-import expressSession from 'express-session';
-import passport from 'passport';
-import Auth0Strategy from 'passport-auth0';
-import path from 'path';
-require("dotenv").config();
-const authRouter = require("./auth");
+import jwt from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
+
 
 const app = express();
 
@@ -81,6 +79,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/", authRouter);
+
+const checkJwt = jwt({
+    secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://thrones.auth0.com/.well-known/jwks.json`
+    }),
+
+    // Validate the audience and the issuer.
+    audience: 'Ho2KUMFOJDO2a9EKW7hqrmKqdl0lt053',
+    issuer: `https://thrones.auth0.com/`,
+    algorithms: ['RS256']
+});
 
 // catch 400
 app.use((err, req, res, next) => {

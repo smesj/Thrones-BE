@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
             ge.win,
             p."firstName",
             p."lastName",
-            p."nickName",
+            p."userName",
             f."factionName",
             f."sigilLocation"
         from thrones."gameEntry" ge

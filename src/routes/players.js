@@ -13,11 +13,25 @@ const updateById = async (body, id, table) => {
     return result;
 }
 
+router.post('/checkNewUser', async (req, res) => {
+    const { sub, nickname, email, picture } = req.body;
+    const {rows: player} = await db.query('SELECT id FROM thrones.players WHERE thrones.players.id = $1', [sub]);
+
+    if (!player.length) {
+        const {rows: newPlayer} = await db.query('INSERT INTO thrones.players ("id", "email", "userName", "picture") values ($1, $2, $3, $4)', [sub, email, nickname, picture])
+        res.send(newPlayer);
+    } else {
+        const newPlayer = []
+        res.send("Existing player");
+    }
+})
+
 router.get('/', async (req, res) => {
     const { rows: players } = await db.query('SELECT * FROM thrones.players');
     res.send(players);
 })
 
+// depreciated
 router.post('/', async (req, res) => {
     const { firstName, lastName, nickName} = req.body;
     const {rows: player} = await db.query('INSERT INTO thrones.players ("firstName", "lastName", "nickName") values ($1, $2, $3)', [firstName, lastName, nickName])

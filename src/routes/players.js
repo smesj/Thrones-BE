@@ -5,13 +5,13 @@ const router = new Router();
 
 module.exports = router
 
-const updateById = async (body, id, table) => {
-    const updateString = Object.keys(body).map((key) => {
-         return '"' + key.toString() + '"' + ' = ' + '"'+body[key]+'"';
-    }).join(',');
-    const { rows: result } = await db.query(`UPDATE ${table} SET ${updateString} WHERE ${table}.id = ${id} RETURNING *`);
-    return result;
-}
+// const updateById = async (body, id, table) => {
+//     const updateString = Object.keys(body).map((key) => {
+//          return '"' + key.toString() + '"' + ' = ' + '"'+body[key]+'"';
+//     }).join(',');
+//     const { rows: result } = await db.query(`UPDATE ${table} SET ${updateString} WHERE ${table}.id = ${id} RETURNING *`);
+//     return result;
+// }
 
 router.post('/checkNewUser', async (req, res) => {
     const { sub, nickname, email, picture } = req.body;
@@ -32,15 +32,20 @@ router.get('/', async (req, res) => {
 })
 
 // depreciated
-router.post('/', async (req, res) => {
-    const { firstName, lastName, nickName} = req.body;
-    const {rows: player} = await db.query('INSERT INTO thrones.players ("firstName", "lastName", "nickName") values ($1, $2, $3)', [firstName, lastName, nickName])
-    res.send(player);
-})
+// router.post('/', async (req, res) => {
+//     const { firstName, lastName, nickName} = req.body;
+//     const {rows: player} = await db.query('INSERT INTO thrones.players ("firstName", "lastName", "nickName") values ($1, $2, $3)', [firstName, lastName, nickName])
+//     res.send(player);
+// })
 
 router.post('/:playerId', async (req, res) => {
-    const player = await updateById(req.body, req.params.playerId, 'thrones.players');
+    const player = await db.query(`UPDATE thrones.players SET "userName" = $1 WHERE thrones.players.id = $2 RETURNING *`, [req.body.userName, req.params.playerId.toString()]);;
     res.send(player)
+})
+
+router.get('/getPlayer/:playerId', async (req, res) => {
+    const {rows: player} = await db.query('SELECT * FROM thrones.players where thrones.players.id = $1', [req.params.playerId.toString()]);
+    res.send(player[0]);
 })
 
 router.get('/withGames', async (req, res) => {

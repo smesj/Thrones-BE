@@ -82,14 +82,24 @@ router.get('/withFactions', async (req, res) => {
             return { ...faction, totalPoints, gamesPlayed, wins };
         })
         var gamesPlayed = gameEntries.length;
-        var totalPoints = gameEntries.reduce((acc, curr) => {
+        var baseTotalPoints = gameEntries.reduce((acc, curr) => {
             return acc + curr.points;
         }, 0);
+        
         var wins = gameEntries.filter(game => game.win === true).length;
-
-        const playerWithFactions = { ...player, factionTotals, gamesPlayed, totalPoints, wins };
+        var totalPoints = baseTotalPoints + (wins * 2);
+        if (isNaN(totalPoints / gamesPlayed)) {
+            var ppg = 0;
+        } else {
+            var ppg = totalPoints / gamesPlayed;
+        }
+        const playerWithFactions = { ...player, factionTotals, gamesPlayed, totalPoints, wins, ppg };
         return playerWithFactions;
     }))
+
+    playerResults.sort((a,b) => {
+        return b.ppg - a.ppg;
+    })
 
     res.send(playerResults);
 })

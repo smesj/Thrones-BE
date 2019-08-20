@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
 // })
 
 router.post('/:playerId', async (req, res) => {
-    const player = await db.query(`UPDATE thrones.players SET "userName" = $1 WHERE thrones.players.id = $2 RETURNING *`, [req.body.userName, req.params.playerId.toString()]);;
+    const player = await db.query(`UPDATE thrones.players SET "userName" = $1, "firstName" = $2 WHERE thrones.players.id = $3 RETURNING *`, [req.body.userName, req.body.firstName, req.params.playerId.toString()]);
     res.send(player)
 })
 
